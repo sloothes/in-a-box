@@ -32,7 +32,7 @@ var APP = {
 
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
-		//	load javascirpt libraries.
+		//	load external javascirpt libraries (experimental).
 
 			if ( json.javascript ) {
 
@@ -73,9 +73,6 @@ var APP = {
 			this.dom.appendChild( renderer.domElement );
 			this.setScene( loader.parse( json.scene ) );
 			this.setCamera( loader.parse( json.camera ) );
-
-        //  Player editor controls (at runtime).
-		//	always "after" setCamera(); important!
 
 			events = {
 				init: [],
