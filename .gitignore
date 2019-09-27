@@ -1,9 +1,9 @@
 
 *.zip
+dev*
 demo/*
 beta/*
 alpha/*
-dev_folder/*
 welcome-center/*
 app (*).json
 scriptLoaderExample.js
