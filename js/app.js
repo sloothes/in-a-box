@@ -20,7 +20,38 @@ var APP = {
 		this.width = 500;
 		this.height = 500;
 
-	//
+	//	Execute script in window scope.
+
+		this.setLibrary = function() {
+
+		//  arguments: soucre code (text) only.
+
+			for (var i in arguments){
+
+				var script = new Function("scope", arguments[ i ]); 
+			//	script = script.bind( window ); // bind to window.
+				script.bind( window ).call(); // bind and execute script.
+				debugMode && console.log("Library", script.toString(), "executed.");
+
+			}
+
+		};
+
+	//	Load javascript libraries.
+
+		this.loadLibrary = function(){
+
+			var loader = new THREE.XHRLoader();
+
+			for ( var i in arguments ){
+
+				loader.load( arguments[i], this.setLibrary );
+				console.log( "Library", arguments[i], "loaded.");
+
+			}
+
+		};
+
 
 		this.load = function ( json ) {
 
@@ -32,28 +63,34 @@ var APP = {
 
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
-		//	load external javascirpt libraries (experimental).
 
-			if ( json.javascript ) {
+		//	Load external javascirpt libraries.
 
-				for ( var i = 0; i < json.javascript.length; i ++ ) {
+			if ( json.javascripts && json.javascripts.length > 0 ) {
 
-					var name = json.javascript[ i ].name;
+				var scripts = json.javascripts.map( parseScript );
+				debugMode && console.log( "scripts:", scripts );
 
-				//	var source = json.javascript[ i ].source;
-				//	var script = new Function( source );
-				//	script.call(); // execute script. important!
+				function parseScript( item ){ 
+					return {
+						name: item.name,
+						source: JSON.parse( item.source ) // important!
+					};
+				}
 
-				//  execute script in one line-code.
-					( new Function( json.javascript[ i ].source ) )(); 
+				while ( scripts.length ) {
 
-					debugMode && console.log( name + " loaded.");
+					var object = scripts.shift(); // important!
+					var script = new Function( "scope", object.source );
+					script.bind( window ).call(); // bind and execute.
+					console.log("Library", object.name, "loaded.");
 
 				}
 
             }
 
-		//
+
+		//	Player renderer.
 
 			renderer = new THREE.WebGLRenderer({ 
 				antialias: true,
@@ -71,8 +108,11 @@ var APP = {
 			}
 
 			this.dom.appendChild( renderer.domElement );
+
 			this.setScene( loader.parse( json.scene ) );
 			this.setCamera( loader.parse( json.camera ) );
+
+        //  If editor controls (at runtime) "always after" setCamera(); important!
 
 			events = {
 				init: [],
@@ -89,7 +129,7 @@ var APP = {
 				update: []
 			};
 
-			var scriptWrapParams = "player,renderer,scene,camera";
+			var scriptWrapParams = "player,renderer,scene,camera,controls";
 			var scriptWrapResultObj = {};
 
 			for ( var eventKey in events ) {
@@ -107,7 +147,9 @@ var APP = {
 
 				if ( object === undefined ) {
 
-					console.warn( "APP.Player: Script without object.", uuid ); continue;
+					console.warn( "APP.Player: Script without object.", uuid ); 
+
+				//	continue;
 
 				}
 
@@ -117,7 +159,7 @@ var APP = {
 
 					var script = scripts[ i ];
 
-					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera );
+					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera, controls );
 
 					for ( var name in functions ) {
 
@@ -125,7 +167,9 @@ var APP = {
 
 						if ( events[ name ] === undefined ) {
 
-							console.warn( "APP.Player: Event type not supported (", name, ")" ); continue;
+							console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+
+							continue;
 
 						}
 
@@ -348,3 +392,41 @@ var APP = {
 	}
 
 };
+
+
+
+
+/*
+	for ( var i = 0; i < json.javascripts.length; i ++ ) {
+
+		var name = json.javascript[ i ].name;
+		var source = json.javascript[ i ].source;
+
+		var script = new Function( "window", source );
+		script.call( window ); // execute script in window scope. important!
+
+		//  execute script in one line-code.
+		//	( new Function( "window", json.javascript[ i ].source ) )( window ); 
+
+		debugMode && console.log( name + " loaded.");
+
+	}
+*/
+
+/*
+	for (var i = 0; i < scripts.length; i++ ){
+
+		var script = new Function("scope", scripts[ i ]); 
+		//	script.call( window ); // execute script.
+		console.log("Script", script.call( window ), "executed.");
+
+	}
+*/
+
+/*
+	while ( scripts.length ) {
+		console.log( "Script", ( new Function("scope", scripts.shift() )( window ), "executed.");
+	}
+*/
+
+//	this.setLibrary.apply( this, json.javascripts.map( parseJSON ) );
