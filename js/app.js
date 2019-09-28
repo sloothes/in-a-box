@@ -249,6 +249,7 @@ var APP = {
 					skeleton = { "body": skinned };
 
 					debugMode && console.log( "skeleton:", skeleton );
+					if ( debugMode ) scene.add( skeleton.body ); // debug!
 
 				})();
 
