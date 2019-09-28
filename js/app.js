@@ -63,7 +63,7 @@ var APP = {
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
 
-		//	Load external javascirpt libraries.
+		//	Load external javascirpt libraries (previous version).
 
 			if ( json.javascripts && json.javascripts.length > 0 ) {
 
@@ -88,24 +88,101 @@ var APP = {
 
 			}
 
+		//	Load external javascirpt libraries (current version).
+
+			jstrap: if ( json.collections ) {
+
+				if ( !json.collections.javascripts ) break jstrap;
+				if ( !json.collections.javascripts.length ) break jstrap;
+
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+				function parseScript( item ){ 
+					return {
+						_id: item.name,
+						source: JSON.parse( item.source ) // important!
+					};
+				}
+
+				var scripts = json.collections.javascripts.map( parseScript );
+
+				debugMode && console.log( "scripts:", scripts );
+
+				while ( scripts.length ) {
+
+					var doc = scripts.shift(); // important!
+					var script = new Function( "scope", doc.source );
+					script.bind( window ).call(); // bind and execute.
+					console.log("Library", doc._id, "loaded.");
+
+				}
+
+			}
 
 		//
 
-			if ( json.functions && json.functions.length > 0 ) {}
+			fnctrap: if ( json.collections ) {
 
-			if ( json.animations && json.animations.length > 0 ) {}
+				if ( !json.collections.functions ) break fnctrap;
+				if ( !json.collections.functions.length ) break fnctrap;
 
-			if ( json.stylesheets && json.stylesheets.length > 0 ) {}
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
-		//
+			}
 
-			if ( json.male && json.male.length > 0 ) {}
+			csstrap: if ( json.collections ) {
 
-			if ( json.female && json.female.length > 0 ) {}
+				if ( !json.collections.stylesheets ) break csstrap;
+				if ( !json.collections.stylesheets.length ) break csstrap;
 
-			if ( json.skeleton && json.female.length > 0 ) {}
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
-			if ( json.skinned && json.skinned.length > 0 ) {}
+			}
+
+			anitrap: if ( json.collections ) {
+
+				if ( !json.collections.animations ) break anitrap;
+				if ( !json.collections.animations.length ) break anitrap;
+
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+			}
+
+			maltrap: if ( json.collections ) {
+
+				if ( !json.collections.male ) break maltrap;
+				if ( !json.collections.male.length ) break maltrap;
+
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+			}
+
+			femtrap: if ( json.collections ) {
+
+				if ( !json.collections.female ) break femtrap;
+				if ( !json.collections.female.length ) break femtrap;
+
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+			}
+
+			sketrap: if ( json.collections ) {
+
+				if ( !json.collections.skeleton ) break sketrap;
+				if ( !json.collections.skeleton.length ) break sketrap;
+
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+			}
+
+			skitrap: if ( json.collections ) {
+
+				if ( !json.collections.skinned ) break skitrap;
+				if ( !json.collections.skinned.length ) break skitrap;
+
+			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+			}
 
 
 		//	Player renderer.
