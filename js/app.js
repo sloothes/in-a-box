@@ -77,7 +77,7 @@ var APP = {
 					};
 				}
 
-				while ( scripts.length ) {
+				while ( javascripts.length ) {
 
 					var object = javascripts.shift(); // important!
 					var script = new Function( "scope", object.source );
@@ -108,7 +108,7 @@ var APP = {
 
 				debugMode && console.log( "javascripts:", javascripts );
 
-				while ( scripts.length ) {
+				while ( javascripts.length ) {
 
 					var doc = javascripts.shift(); // important!
 					var script = new Function( "scope", doc.source );
