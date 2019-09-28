@@ -210,13 +210,13 @@ var APP = {
 					debugMode && console.log( "skeleton body:", body );
 
 					var data = JSON.stringify( body.geometry ); // important!
-					var object = JSON.parse( data );
-					delete object._id; // important?
-					debugMode && console.log( "skeleton object:", object );
+				//	var object = JSON.parse( data );
+				//	delete object._id; // important?
+				//	debugMode && console.log( "skeleton object:", object );
 
 					var loader = new THREE.JSONLoader();
-					var geometry = loader.parse( object );
-					debugMode && console.log( "skeleton geometry:", geometry );
+					var object = loader.parse( data );
+					debugMode && console.log( "skeleton object:", object );
 
 
 
