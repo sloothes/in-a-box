@@ -129,6 +129,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var functions = json.collections.functions;
+				debugMode && console.log( "functions:", functions );
 
 			}
 
@@ -140,6 +141,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var stylesheets = json.collections.stylesheets;
+				debugMode && console.log( "stylesheets:", stylesheets );
 
 			}
 
@@ -151,6 +153,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var animations = json.collections.animations;
+				debugMode && console.log( "animations:", animations );
 
 			}
 
@@ -162,6 +165,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var male = json.collections.male;
+				debugMode && console.log( "male:", male );
 
 			}
 
@@ -173,6 +177,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var female = json.collections.female;
+				debugMode && console.log( "female:", female );
 
 			}
 
@@ -184,6 +189,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var skeleton = json.collections.skeleton;
+				debugMode && console.log( "skeleton:", skeleton );
 
 			}
 
@@ -195,6 +201,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var skinned = json.collections.skinned;
+				debugMode && console.log( "skinned:", skinned );
 
 			}
 
