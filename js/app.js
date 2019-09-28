@@ -209,12 +209,12 @@ var APP = {
 
 					debugMode && console.log( "skeleton body:", body );
 
-					var object = JSON.parse( body.geometry );
-					debugMode && console.log( "skeleton object:", object );
+					var data = JSON.stringify( body.geometry );
+					var json = JSON.parse( data );
+					debugMode && console.log( "skeleton json:", json );
 
 					var loader = new THREE.JSONLoader();
-					var geometry = loader.parse( object.geometry );
-
+					var geometry = loader.parse( json );
 					debugMode && console.log( "skeleton geometry:", geometry );
 
 
