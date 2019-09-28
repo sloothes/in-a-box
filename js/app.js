@@ -197,11 +197,15 @@ var APP = {
 					var collection = json.collections.skeleton;
 					debugMode && console.log( "skeleton collection:", collection );
 
+				//
+
 					var bones = collection.find(function(item){
 						return item._id == "bones";
 					});
 
 					debugMode && console.log( "skeleton bones:", bones );
+
+				//
 
 					var body = collection.find(function(item){
 						return item._id == "body";
@@ -209,24 +213,42 @@ var APP = {
 
 					debugMode && console.log( "skeleton body:", body );
 
-				// "body.geometry" is a text response of the THREE.XHRLoader,
-
+				// "skeleton.body.geometry" must be a text response of the THREE.XHRLoader,
 					//	loader.load("/skinned/skeleton/skeleton.json", function(response){
 					//		body.geometry = response.replace( /\"/g, '\\"' );
 					//	});
-  
-				//  where we replace (") with (\"). response.replace(/\"/g, '\\"');
-				//	We have to parse "body.geometry" with JSON.parse() first,
-				//	to get the correct json data for the THREE.JSONLoader().
+  				//  where we replace (") with (\"). response.replace(/\"/g, '\\"');
+				//	We have to parse with "JSON.parse( body.geometry )" first,
+				//	before we get the correct json data for the THREE.JSONLoader().
 
 					var data = JSON.parse( body.geometry ); // important!
 
 					var loader = new THREE.JSONLoader();
 					var object = loader.parse( data ); // important!
+
 					debugMode && console.log( "skeleton object:", object );
 
+					var geometry = object.geometry;
+					var material = object.material; // TODO: materialfromJSON( body.material );
 
+					geometry.computeFaceNormals();
+					geometry.computeVertexNormals();
+					geometry.computeBoundingBox();
+					geometry.computeBoundingSphere();
 
+					var skinned = new THREE.SkinnedMesh( geometry, material );
+
+					skinned.renderDepth = 1;
+					skinned.frustumCulled = false;
+					skinned.position.set( 0, 0, 0 );
+					skinned.rotation.set( 0, 0, 0 );
+					skinned.scale.copy( body.scale );
+					skinned.castShadow = true;
+					skinned.name = body.name;
+
+					skeleton = { "body": skinned };
+
+					debugMode && console.log( "skeleton:", skeleton );
 
 				})();
 
