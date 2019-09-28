@@ -67,8 +67,8 @@ var APP = {
 
 			if ( json.javascripts && json.javascripts.length > 0 ) {
 
-				var scripts = json.javascripts.map( parseScript );
-				debugMode && console.log( "scripts:", scripts );
+				var javascripts = json.javascripts.map( parseScript );
+				debugMode && console.log( "javascripts:", javascripts );
 
 				function parseScript( item ){ 
 					return {
@@ -79,7 +79,7 @@ var APP = {
 
 				while ( scripts.length ) {
 
-					var object = scripts.shift(); // important!
+					var object = javascripts.shift(); // important!
 					var script = new Function( "scope", object.source );
 					script.bind( window ).call(); // bind and execute.
 					console.log("Library", object.name, "loaded.");
@@ -104,13 +104,13 @@ var APP = {
 					};
 				}
 
-				var scripts = json.collections.javascripts.map( parseScript );
+				var javascripts = json.collections.javascripts.map( parseScript );
 
-				debugMode && console.log( "scripts:", scripts );
+				debugMode && console.log( "javascripts:", javascripts );
 
 				while ( scripts.length ) {
 
-					var doc = scripts.shift(); // important!
+					var doc = javascripts.shift(); // important!
 					var script = new Function( "scope", doc.source );
 					script.bind( window ).call(); // bind and execute.
 					console.log("Library", doc._id, "loaded.");
@@ -128,6 +128,8 @@ var APP = {
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
+				var functions = json.collections.functions;
+
 			}
 
 			csstrap: if ( json.collections ) {
@@ -136,6 +138,8 @@ var APP = {
 				if ( !json.collections.stylesheets.length ) break csstrap;
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+				var stylesheets = json.collections.stylesheets;
 
 			}
 
@@ -146,6 +150,8 @@ var APP = {
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
+				var animations = json.collections.animations;
+
 			}
 
 			maltrap: if ( json.collections ) {
@@ -155,6 +161,8 @@ var APP = {
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
+				var male = json.collections.male;
+
 			}
 
 			femtrap: if ( json.collections ) {
@@ -163,6 +171,8 @@ var APP = {
 				if ( !json.collections.female.length ) break femtrap;
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+				var female = json.collections.female;
 
 			}
 
@@ -174,7 +184,7 @@ var APP = {
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
 				var skeleton = json.collections.skeleton;
-				
+
 			}
 
 			skitrap: if ( json.collections ) {
@@ -183,6 +193,8 @@ var APP = {
 				if ( !json.collections.skinned.length ) break skitrap;
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
+
+				var skinned = json.collections.skinned;
 
 			}
 
