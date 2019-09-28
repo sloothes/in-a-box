@@ -34,11 +34,15 @@
 			"name": "KeyFrameAnimation.js",
 			"source": "\"/**\\r\\n * @author mikael emtinger / http://gomo.se/\\r\\n * @author mrdoob / http://mrdoob.com/\\r\\n * @author alteredq / http://alteredqualia.com/\\r\\n * @author khang duong\\r\\n * @author erik kitson\\r\\n */\\r\\n\\r\\nTHREE.KeyFrameAnimation = function ( data ) {\\r\\n\\r\\n\\tthis.root = data.node;\\r\\n\\tthis.data = THREE.AnimationHandler.init( data );\\r\\n\\tthis.hierarchy = THREE.AnimationHandler.parse( this.root );\\r\\n\\tthis.currentTime = 0;\\r\\n\\tthis.timeScale = 0.001;\\r\\n\\tthis.isPlaying = false;\\r\\n\\tthis.isPaused = true;\\r\\n\\tthis.loop = true;\\r\\n\\r\\n\\t// initialize to first keyframes\\r\\n\\r\\n\\tfor ( var h = 0, hl = this.hierarchy.length; h < hl; h ++ ) {\\r\\n\\r\\n\\t\\tvar keys = this.data.hierarchy[ h ].keys,\\r\\n\\t\\t\\tsids = this.data.hierarchy[ h ].sids,\\r\\n\\t\\t\\tobj = this.hierarchy[ h ];\\r\\n\\r\\n\\t\\tif ( keys.length && sids ) {\\r\\n\\r\\n\\t\\t\\tfor ( var s = 0; s < sids.length; s ++ ) {\\r\\n\\r\\n\\t\\t\\t\\tvar sid = sids[ s ],\\r\\n\\t\\t\\t\\t\\tnext = this.getNextKeyWith( sid, h, 0 );\\r\\n\\r\\n\\t\\t\\t\\tif ( next ) {\\r\\n\\r\\n\\t\\t\\t\\t\\tnext.apply( sid );\\r\\n\\r\\n\\t\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\tobj.matrixAutoUpdate = false;\\r\\n\\t\\t\\tthis.data.hierarchy[ h ].node.updateMatrix();\\r\\n\\t\\t\\tobj.matrixWorldNeedsUpdate = true;\\r\\n\\r\\n\\t\\t}\\r\\n\\r\\n\\t}\\r\\n\\r\\n};\\r\\n\\r\\nTHREE.KeyFrameAnimation.prototype = {\\r\\n\\r\\n\\tconstructor: THREE.KeyFrameAnimation,\\r\\n\\r\\n\\tplay: function ( startTime ) {\\r\\n\\r\\n\\t\\tthis.currentTime = startTime !== undefined ? startTime : 0;\\r\\n\\r\\n\\t\\tif ( this.isPlaying === false ) {\\r\\n\\r\\n\\t\\t\\tthis.isPlaying = true;\\r\\n\\r\\n\\t\\t\\t// reset key cache\\r\\n\\r\\n\\t\\t\\tvar h, hl = this.hierarchy.length,\\r\\n\\t\\t\\t\\tobject,\\r\\n\\t\\t\\t\\tnode;\\r\\n\\r\\n\\t\\t\\tfor ( h = 0; h < hl; h ++ ) {\\r\\n\\r\\n\\t\\t\\t\\tobject = this.hierarchy[ h ];\\r\\n\\t\\t\\t\\tnode = this.data.hierarchy[ h ];\\r\\n\\r\\n\\t\\t\\t\\tif ( node.animationCache === undefined ) {\\r\\n\\r\\n\\t\\t\\t\\t\\tnode.animationCache = {};\\r\\n\\t\\t\\t\\t\\tnode.animationCache.prevKey = null;\\r\\n\\t\\t\\t\\t\\tnode.animationCache.nextKey = null;\\r\\n\\t\\t\\t\\t\\tnode.animationCache.originalMatrix = object.matrix;\\r\\n\\r\\n\\t\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\t\\tvar keys = this.data.hierarchy[ h ].keys;\\r\\n\\r\\n\\t\\t\\t\\tif ( keys.length > 1 ) {\\r\\n\\r\\n\\t\\t\\t\\t\\tnode.animationCache.prevKey = keys[ 0 ];\\r\\n\\t\\t\\t\\t\\tnode.animationCache.nextKey = keys[ 1 ];\\r\\n\\r\\n\\t\\t\\t\\t\\tthis.startTime = Math.min( keys[ 0 ].time, this.startTime );\\r\\n\\t\\t\\t\\t\\tthis.endTime = Math.max( keys[ keys.length - 1 ].time, this.endTime );\\r\\n\\r\\n\\t\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\tthis.update( 0 );\\r\\n\\r\\n\\t\\t}\\r\\n\\r\\n\\t\\tthis.isPaused = false;\\r\\n\\t},\\r\\n\\r\\n\\tstop: function () {\\r\\n\\r\\n\\t\\tthis.isPlaying = false;\\r\\n\\t\\tthis.isPaused  = false;\\r\\n\\r\\n\\t\\t// reset JIT matrix and remove cache\\r\\n\\r\\n\\t\\tfor ( var h = 0; h < this.data.hierarchy.length; h ++ ) {\\r\\n\\r\\n\\t\\t\\tvar obj = this.hierarchy[ h ];\\r\\n\\t\\t\\tvar node = this.data.hierarchy[ h ];\\r\\n\\r\\n\\t\\t\\tif ( node.animationCache !== undefined ) {\\r\\n\\r\\n\\t\\t\\t\\tvar original = node.animationCache.originalMatrix;\\r\\n\\r\\n\\t\\t\\t\\toriginal.copy( obj.matrix );\\r\\n\\t\\t\\t\\tobj.matrix = original;\\r\\n\\r\\n\\t\\t\\t\\tdelete node.animationCache;\\r\\n\\r\\n\\t\\t\\t}\\r\\n\\r\\n\\t\\t}\\r\\n\\r\\n\\t},\\r\\n\\r\\n\\tupdate: function ( delta ) {\\r\\n\\r\\n\\t\\tif ( this.isPlaying === false ) return;\\r\\n\\r\\n\\t\\tthis.currentTime += delta * this.timeScale;\\r\\n\\r\\n\\t\\t//\\r\\n\\r\\n\\t\\tvar duration = this.data.length;\\r\\n\\r\\n\\t\\tif ( this.loop === true && this.currentTime > duration ) {\\r\\n\\r\\n\\t\\t\\tthis.currentTime %= duration;\\r\\n\\r\\n\\t\\t}\\r\\n\\r\\n\\t\\tthis.currentTime = Math.min( this.currentTime, duration );\\r\\n\\r\\n\\t\\tfor ( var h = 0, hl = this.hierarchy.length; h < hl; h ++ ) {\\r\\n\\r\\n\\t\\t\\tvar object = this.hierarchy[ h ];\\r\\n\\t\\t\\tvar node = this.data.hierarchy[ h ];\\r\\n\\r\\n\\t\\t\\tvar keys = node.keys,\\r\\n\\t\\t\\t\\tanimationCache = node.animationCache;\\r\\n\\r\\n\\r\\n\\t\\t\\tif ( keys.length ) {\\r\\n\\r\\n\\t\\t\\t\\tvar prevKey = animationCache.prevKey;\\r\\n\\t\\t\\t\\tvar nextKey = animationCache.nextKey;\\r\\n\\r\\n\\t\\t\\t\\tif ( nextKey.time <= this.currentTime ) {\\r\\n\\r\\n\\t\\t\\t\\t\\twhile ( nextKey.time < this.currentTime && nextKey.index > prevKey.index ) {\\r\\n\\r\\n\\t\\t\\t\\t\\t\\tprevKey = nextKey;\\r\\n\\t\\t\\t\\t\\t\\tnextKey = keys[ prevKey.index + 1 ];\\r\\n\\r\\n\\t\\t\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\t\\t\\tanimationCache.prevKey = prevKey;\\r\\n\\t\\t\\t\\t\\tanimationCache.nextKey = nextKey;\\r\\n\\r\\n\\t\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\t\\tif ( nextKey.time >= this.currentTime ) {\\r\\n\\r\\n\\t\\t\\t\\t\\tprevKey.interpolate( nextKey, this.currentTime );\\r\\n\\r\\n\\t\\t\\t\\t} else {\\r\\n\\r\\n\\t\\t\\t\\t\\tprevKey.interpolate( nextKey, nextKey.time );\\r\\n\\r\\n\\t\\t\\t\\t}\\r\\n\\r\\n\\t\\t\\t\\tthis.data.hierarchy[ h ].node.updateMatrix();\\r\\n\\t\\t\\t\\tobject.matrixWorldNeedsUpdate = true;\\r\\n\\r\\n\\t\\t\\t}\\r\\n\\r\\n\\t\\t}\\r\\n\\r\\n\\t},\\r\\n\\r\\n\\tgetNextKeyWith: function ( sid, h, key ) {\\r\\n\\r\\n\\t\\tvar keys = this.data.hierarchy[ h ].keys;\\r\\n\\t\\tkey = key % keys.length;\\r\\n\\r\\n\\t\\tfor ( ; key < keys.length; key ++ ) {\\r\\n\\r\\n\\t\\t\\tif ( keys[ key ].hasTarget( sid ) ) {\\r\\n\\r\\n\\t\\t\\t\\treturn keys[ key ];\\r\\n\\r\\n\\t\\t\\t}\\r\\n\\r\\n\\t\\t}\\r\\n\\r\\n\\t\\treturn keys[ 0 ];\\r\\n\\r\\n\\t},\\r\\n\\r\\n\\tgetPrevKeyWith: function ( sid, h, key ) {\\r\\n\\r\\n\\t\\tvar keys = this.data.hierarchy[ h ].keys;\\r\\n\\t\\tkey = key >= 0 ? key : key + keys.length;\\r\\n\\r\\n\\t\\tfor ( ; key >= 0; key -- ) {\\r\\n\\r\\n\\t\\t\\tif ( keys[ key ].hasTarget( sid ) ) {\\r\\n\\r\\n\\t\\t\\t\\treturn keys[ key ];\\r\\n\\r\\n\\t\\t\\t}\\r\\n\\r\\n\\t\\t}\\r\\n\\r\\n\\t\\treturn keys[ keys.length - 1 ];\\r\\n\\r\\n\\t}\\r\\n\\r\\n};\\r\\n\""
 		}],
+	"functions": [],
+	"animations": [],
 	"stylesheets": [],
 	"male": [],
 	"female": [],
+	"skinned": [],
 	"skeleton": [
 		{
+			"_id":"body",
 			"name":"body",
 			"visible":true,
 			"scale":[1,1,1],
@@ -53,18 +57,50 @@
 				"skinning":true,
 				"alphaTest":0.5,
 				"transparent":false
-			},
-		"_id":"body"
-		},
+			}
+		}, 
 		{
 			"_id":"bones",
+			"name":"bones",
+			"version":"0.1"
+			"bodyKit":"FBK07",
+			"sourceFile":"FM_Body_FBK07.json",
+			"blenderFile":"Female-BodyKit-v07.blend",
 			"bones":[
-				{"name":"Hips","rotq":[0,0,0,1],"pos":[-0.000027,18.2131,0.000197],"parent":-1},{"name":"LHipJoint","rotq":[0,0,0,1],"pos":[0.000027,0.055037,0.000009],"parent":0},{"name":"LeftUpLeg","rotq":[0,0,0,1],"pos":[1.54938,-2.41555,0.04113],"parent":1},{"name":"LeftLeg","rotq":[0,0,0,1],"pos":[-0.019988,-7.21534,-0.208633],"parent":2},{"name":"LeftFoot","rotq":[0,0,0,1],"pos":[0.320012,-7.29465,-0.471353],"parent":3},{"name":"LeftToeBase","rotq":[0,0,0,1],"pos":[0.198471,-0.54529,2.28466],"parent":4},{"name":"RHipJoint","rotq":[0,0,0,1],"pos":[0.000027,0.055037,0.000009],"parent":0},{"name":"RightUpLeg","rotq":[0,0,0,1],"pos":[-1.43938,-2.41556,0.041129],"parent":6},{"name":"RightLeg","rotq":[0,0,0,1],"pos":[-0.08999,-7.21534,-0.208642],"parent":7},{"name":"RightFoot","rotq":[0,0,0,1],"pos":[-0.31999,-7.29467,-0.471362],"parent":8},{"name":"RightToeBase","rotq":[0,0,0,1],"pos":[-0.305358,-0.83898,2.28801],"parent":9},{"name":"LowerBack","rotq":[0,0,0,1],"pos":[0.000027,0.055037,0.000009],"parent":0},{"name":"Spine","rotq":[0,0,0,1],"pos":[-0.04381,1.99522,-0.197985],"parent":11},{"name":"Spine1","rotq":[0,0,0,1],"pos":[-0.01959,2.01295,-0.04372],"parent":12},{"name":"Neck","rotq":[0,0,0,1],"pos":[0,0,0],"parent":13},{"name":"Neck1","rotq":[0,0,0,1],"pos":[0.063054,2.1058,-0.51192],"parent":14},{"name":"Head","rotq":[0,0,0,1],"pos":[-0.023034,1.43701,0.497281],"parent":15},{"name":"LeftShoulder","rotq":[0,0,0,1],"pos":[0,0,0],"parent":14},{"name":"LeftArm","rotq":[0,0,0,1],"pos":[2.59288,1.2264,-0.487197],"parent":17},{"name":"LeftForeArm","rotq":[0,0,0,1],"pos":[4.14553,-0.064466,0.257386],"parent":18},{"name":"LeftHand","rotq":[0,0,0,1],"pos":[3.69802,0.065802,1.73268],"parent":19},{"name":"LeftFingerBase","rotq":[0,0,0,1],"pos":[-0.000254,0,-0.000043],"parent":20},{"name":"LeftHandIndex1","rotq":[0,0,0,1],"pos":[0.559672,0,0.260979],"parent":21},{"name":"LThumb","rotq":[0,0,0,1],"pos":[-0.000254,0,-0.000043],"parent":20},{"name":"RightShoulder","rotq":[0,0,0,1],"pos":[0,0,0],"parent":14},{"name":"RightArm","rotq":[0,0,0,1],"pos":[-2.46562,1.22638,-0.487065],"parent":24},{"name":"RightForeArm","rotq":[0,0,0,1],"pos":[-4.14558,-0.064367,0.259234],"parent":25},{"name":"RightHand","rotq":[0,0,0,1],"pos":[-3.69873,0.066645,1.72989],"parent":26},{"name":"RightFingerBase","rotq":[0,0,0,1],"pos":[-0.000058,0,0.000157],"parent":27},{"name":"RightHandIndex1","rotq":[0,0,0,1],"pos":[-0.529147,0,0.246746],"parent":28},{"name":"RThumb","rotq":[0,0,0,1],"pos":[-0.000058,0,0.000157],"parent":27}],"name":"bones","bodyKit":"FBK07","sourceFile":"FM_Body_FBK07.json","blenderFile":"Female-BodyKit-v07.blend","version":"0.1"}
+				{"name":"Hips","rotq":[0,0,0,1],"pos":[-0.000027,18.2131,0.000197],"parent":-1},
+				{"name":"LHipJoint","rotq":[0,0,0,1],"pos":[0.000027,0.055037,0.000009],"parent":0},
+				{"name":"LeftUpLeg","rotq":[0,0,0,1],"pos":[1.54938,-2.41555,0.04113],"parent":1},
+				{"name":"LeftLeg","rotq":[0,0,0,1],"pos":[-0.019988,-7.21534,-0.208633],"parent":2},
+				{"name":"LeftFoot","rotq":[0,0,0,1],"pos":[0.320012,-7.29465,-0.471353],"parent":3},
+				{"name":"LeftToeBase","rotq":[0,0,0,1],"pos":[0.198471,-0.54529,2.28466],"parent":4},
+				{"name":"RHipJoint","rotq":[0,0,0,1],"pos":[0.000027,0.055037,0.000009],"parent":0},
+				{"name":"RightUpLeg","rotq":[0,0,0,1],"pos":[-1.43938,-2.41556,0.041129],"parent":6},
+				{"name":"RightLeg","rotq":[0,0,0,1],"pos":[-0.08999,-7.21534,-0.208642],"parent":7},
+				{"name":"RightFoot","rotq":[0,0,0,1],"pos":[-0.31999,-7.29467,-0.471362],"parent":8},
+				{"name":"RightToeBase","rotq":[0,0,0,1],"pos":[-0.305358,-0.83898,2.28801],"parent":9},
+				{"name":"LowerBack","rotq":[0,0,0,1],"pos":[0.000027,0.055037,0.000009],"parent":0},
+				{"name":"Spine","rotq":[0,0,0,1],"pos":[-0.04381,1.99522,-0.197985],"parent":11},
+				{"name":"Spine1","rotq":[0,0,0,1],"pos":[-0.01959,2.01295,-0.04372],"parent":12},
+				{"name":"Neck","rotq":[0,0,0,1],"pos":[0,0,0],"parent":13},
+				{"name":"Neck1","rotq":[0,0,0,1],"pos":[0.063054,2.1058,-0.51192],"parent":14},
+				{"name":"Head","rotq":[0,0,0,1],"pos":[-0.023034,1.43701,0.497281],"parent":15},
+				{"name":"LeftShoulder","rotq":[0,0,0,1],"pos":[0,0,0],"parent":14},
+				{"name":"LeftArm","rotq":[0,0,0,1],"pos":[2.59288,1.2264,-0.487197],"parent":17},
+				{"name":"LeftForeArm","rotq":[0,0,0,1],"pos":[4.14553,-0.064466,0.257386],"parent":18},
+				{"name":"LeftHand","rotq":[0,0,0,1],"pos":[3.69802,0.065802,1.73268],"parent":19},
+				{"name":"LeftFingerBase","rotq":[0,0,0,1],"pos":[-0.000254,0,-0.000043],"parent":20},
+				{"name":"LeftHandIndex1","rotq":[0,0,0,1],"pos":[0.559672,0,0.260979],"parent":21},
+				{"name":"LThumb","rotq":[0,0,0,1],"pos":[-0.000254,0,-0.000043],"parent":20},
+				{"name":"RightShoulder","rotq":[0,0,0,1],"pos":[0,0,0],"parent":14},
+				{"name":"RightArm","rotq":[0,0,0,1],"pos":[-2.46562,1.22638,-0.487065],"parent":24},
+				{"name":"RightForeArm","rotq":[0,0,0,1],"pos":[-4.14558,-0.064367,0.259234],"parent":25},
+				{"name":"RightHand","rotq":[0,0,0,1],"pos":[-3.69873,0.066645,1.72989],"parent":26},
+				{"name":"RightFingerBase","rotq":[0,0,0,1],"pos":[-0.000058,0,0.000157],"parent":27},
+				{"name":"RightHandIndex1","rotq":[0,0,0,1],"pos":[-0.529147,0,0.246746],"parent":28},
+				{"name":"RThumb","rotq":[0,0,0,1],"pos":[-0.000058,0,0.000157],"parent":27}
+			]
+		}
 	],
-	"animations":[],
-	"materials": [],
-	"textures": [],
-	"skinned": [],
 	"scripts": {},
 	"camera": {
 		"metadata": {
