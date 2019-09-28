@@ -62,7 +62,7 @@
 		{
 			"_id":"bones",
 			"name":"bones",
-			"version":"0.1"
+			"version":"0.1",
 			"bodyKit":"FBK07",
 			"sourceFile":"FM_Body_FBK07.json",
 			"blenderFile":"Female-BodyKit-v07.blend",
