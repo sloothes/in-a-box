@@ -63,9 +63,6 @@ var APP = {
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
 
-			if ( json.stylesheets && json.stylesheets.length > 0 ) { /* TODO */ }
-
-
 		//	Load external javascirpt libraries.
 
 			if ( json.javascripts && json.javascripts.length > 0 ) {
@@ -94,15 +91,11 @@ var APP = {
 
 		//
 
-			if ( json.textures && json.textures.length > 0 ) {}
-
-			if ( json.materials && json.materials.length > 0 ) {}
+			if ( json.functions && json.functions.length > 0 ) {}
 
 			if ( json.animations && json.animations.length > 0 ) {}
 
-		//
-
-			if ( json.functions && json.functions.length > 0 ) {}
+			if ( json.stylesheets && json.stylesheets.length > 0 ) {}
 
 		//
 
