@@ -211,6 +211,7 @@ var APP = {
 
 					var data = JSON.stringify( body.geometry ); // important!
 					var object = JSON.parse( data );
+					delete object._id; // important?
 					debugMode && console.log( "skeleton object:", object );
 
 					var loader = new THREE.JSONLoader();
