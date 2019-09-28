@@ -9,8 +9,8 @@ var APP = {
 		var scope = this;
 
 		var loader = new THREE.ObjectLoader();
-		var camera, scene, renderer;
 
+		var camera, scene, renderer;
 		var vr, controls, effect, center;
 
 		var events = {};
@@ -249,7 +249,6 @@ var APP = {
 					skeleton = { "body": skinned };
 
 					debugMode && console.log( "skeleton:", skeleton );
-					if ( debugMode ) scene.add( skeleton.body ); // debug!
 
 				})();
 
@@ -294,8 +293,22 @@ var APP = {
 			this.setScene( loader.parse( json.scene ) );
 			this.setCamera( loader.parse( json.camera ) );
 
-        //  If editor controls (at runtime) "always after" setCamera(); important!
+		//  As scene set now we can start adding 3D asset in scene.
+		//  If editor controls always after setCamera(); important!
 
+		//  TEST.
+
+			if ( debugMode ) {
+
+				scene.add( skeleton.body ); // debug!
+				controls = new THREE.EditorControls( camera, this.dom ); // debug!
+
+
+
+
+			}
+
+		//
 			events = {
 				init: [],
 				start: [],
