@@ -56,7 +56,7 @@
 				],
 				"metadata":{
 					"bones":31,
-					"version":3
+					"version":3,
 					"faces":9464,
 					"vertices":5059,
 					"type":"Geometry",
