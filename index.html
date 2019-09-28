@@ -4,7 +4,26 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-		<title>three.js</title>
+		<title>boilerplate in-a-box (v4.2.0)</title>
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/bootbox-dialoges.css">
+		<link rel="stylesheet" href="/css/side-panels.css">
+		<link rel="stylesheet" href="/css/meter.css">
+		<link rel="stylesheet" href="/css/messg.css" >
+		<link rel="stylesheet" href="/css/spectrum.css">
+		<link rel="stylesheet" href="/css/colorpicker.css">
+		<link rel="stylesheet" href="/css/spinner.css">
+		<link rel="stylesheet" href="/css/jquery-ui.css">
+		<link rel="stylesheet" href="/css/alerts.css">
+		<link rel="stylesheet" href="/css/panel-ui.css">
+		<link rel="stylesheet" href="/css/anywhere3d.css">
+		<link rel="stylesheet" href="/css/jquery.Jcrop.css">
+		<link rel="stylesheet" href="/css/menu-menubar.css">
+		<link rel="stylesheet" href="/css/index.css">
+		<link rel="stylesheet" href="/style.css">
+		<link rel="stylesheet" href="/photoswipe/dist/photoswipe.css">
+		<link rel="stylesheet" href="/photoswipe/dist/default-skin/default-skin.css">
 
         <style>
 
@@ -100,17 +119,37 @@
 		<script src="/three/TransformControls.js"></script> 
 -->
 
+		<script src="/socketcluster.js"></script>
+		<script src="/sc-codec-min-bin.js"></script>
+
 	</head>
 
 	<body ontouchstart="">
 
 		<script src="js/app.js"></script>
-
-		
+		<script src="/js/ui.js"></script>
+		<script src="/js/ui.three.js"></script>
+		<script src="/three/three.js"></script>
 
 		<script>
 
-			bootboxLoading();
+			(function(){
+
+				var loadingDialog = document.createElement("div");
+				loadingDialog.id = "loading-dialog"
+				loadingDialog.classList.add("middle", "text-center");
+				loadingDialog.style.cssText = "position:absolute;top:0;left:0;bottom:0;right:0;background:none;z-index:9999;";
+
+				var dialogContent = document.createElement("h2");
+				dialogContent.style.cssText = "width:fit-content;font-weight:bold;color:#fff;text-align:center;"
+				dialogContent.innerHTML = "Loading" + "<br>" + "Please wait..." + "<br>" + "(heavy duty)";
+
+				loadingDialog.appendChild( dialogContent );
+				document.body.appendChild( loadingDialog );
+
+			})();
+
+		//	bootboxLoading();
 
 			var loader = new THREE.XHRLoader();
 			loader.load( "app.json", function ( text ) {
@@ -145,10 +184,32 @@
 					player.setSize( window.innerWidth, window.innerHeight );
 				});
 
-                bootbox.hideAll();
+			//	bootbox.hideAll();
+
+				setTimeout(function(){
+					var dialog = document.getElementById("loading-dialog");
+					dialog.style.display = "none"; dialog.parentElement.remove( dialog );
+				}, 1000);
 
 			});
 
+			(function(){
+
+			//  Joystick controls.
+
+				var joysticControls1 = document.createElement( "div" );
+				var joysticControls2 = document.createElement( "div" );
+				joysticControls1.id = "joystick-controls-1";
+				joysticControls2.id = "joystick-controls-2";
+				joysticControls1.classList.add("joystick-controls");
+				joysticControls2.classList.add("joystick-controls");
+
+                document.body.appendChild( joysticControls1 );
+                document.body.appendChild( joysticControls2 );
+
+			})();
+
+		/*
 			function bootboxLoading(){
 
 			//  Loading bar.
@@ -170,22 +231,7 @@
 				});
 
 			}
-
-			(function(){
-
-			//  Joystick controls.
-
-				var joysticControls1 = document.createElement( "div" );
-				var joysticControls2 = document.createElement( "div" );
-				joysticControls1.id = "joystick-controls-1";
-				joysticControls2.id = "joystick-controls-2";
-				joysticControls1.classList.add("joystick-controls");
-				joysticControls2.classList.add("joystick-controls");
-
-                document.body.appendChild( joysticControls1 );
-                document.body.appendChild( joysticControls2 );
-
-			})();
+		*/
 
 		</script>
 	</body>
