@@ -176,32 +176,64 @@ var APP = {
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
-				var female = json.collections.female;
-				debugMode && console.log( "female:", female );
+				(function(){
+
+					var collection = json.collections.female;
+					debugMode && console.log( "female collection:", collection );
+
+				}();
 
 			}
 
-			sketrap: if ( json.collections ) {
+			skltrap: if ( json.collections ) {
 
-				if ( !json.collections.skeleton ) break sketrap;
-				if ( !json.collections.skeleton.length ) break sketrap;
+				if ( !json.collections.skeleton ) break skltrap;
+				if ( !json.collections.skeleton.length ) break skltrap;
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
-				var skeleton = json.collections.skeleton;
-				debugMode && console.log( "skeleton:", skeleton );
+				(function(){
+
+					var collection = json.collections.skeleton;
+					debugMode && console.log( "skeleton collection:", collection );
+
+					var bones = collection.find(function(item){
+						return item._id = "bones";
+					});
+
+					debugMode && console.log( "skeleton bones:", bones );
+
+					var body = collection.find(function(item){
+						return item._id = "body";
+					});
+
+					debugMode && console.log( "skeleton body:", body );
+
+					var loader = new THREE.JSONLoader();
+					var geometry = loader.parse( body.geometry );
+
+					debugMode && console.log( "skeleton geometry:", geometry );
+
+
+
+
+				}();
 
 			}
 
-			skitrap: if ( json.collections ) {
+			skntrap: if ( json.collections ) {
 
-				if ( !json.collections.skinned ) break skitrap;
-				if ( !json.collections.skinned.length ) break skitrap;
+				if ( !json.collections.skinned ) break skntrap;
+				if ( !json.collections.skinned.length ) break skntrap;
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
-				var skinned = json.collections.skinned;
-				debugMode && console.log( "skinned:", skinned );
+				(function(){
+
+					var collection = json.collections.skinned;
+					debugMode && console.log( "skinned collection:", collection );
+
+				}();
 
 			}
 
