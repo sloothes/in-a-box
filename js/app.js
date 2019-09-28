@@ -173,6 +173,8 @@ var APP = {
 
 			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
 
+				var skeleton = json.collections.skeleton;
+				
 			}
 
 			skitrap: if ( json.collections ) {
