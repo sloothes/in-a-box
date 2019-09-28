@@ -209,10 +209,20 @@ var APP = {
 
 					debugMode && console.log( "skeleton body:", body );
 
-					/*	.replace(/\"/g, '\\"');  */
+				// "body.geometry" is a text response of the THREE.XHRLoader,
+
+					//	loader.load("/skinned/skeleton/skeleton.json", function(response){
+					//		body.geometry = response.replace( /\"/g, '\\"' );
+					//	});
+  
+				//  where we replace (") with (\"). response.replace(/\"/g, '\\"');
+				//	We have to parse "body.geometry" with JSON.parse() first,
+				//	to get the correct json data for the THREE.JSONLoader().
+
+					var data = JSON.parse( body.geometry ); // important!
 
 					var loader = new THREE.JSONLoader();
-					var object = loader.parse( body.geometry );
+					var object = loader.parse( data ); // important!
 					debugMode && console.log( "skeleton object:", object );
 
 
