@@ -181,7 +181,7 @@ var APP = {
 					var collection = json.collections.female;
 					debugMode && console.log( "female collection:", collection );
 
-				}();
+				})();
 
 			}
 
@@ -217,7 +217,7 @@ var APP = {
 
 
 
-				}();
+				})();
 
 			}
 
@@ -233,7 +233,7 @@ var APP = {
 					var collection = json.collections.skinned;
 					debugMode && console.log( "skinned collection:", collection );
 
-				}();
+				})();
 
 			}
 
