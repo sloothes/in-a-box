@@ -209,6 +209,8 @@ var APP = {
 
 					debugMode && console.log( "skeleton body:", body );
 
+					/*	.replace(/\"/g, '\\"');  */
+
 					var loader = new THREE.JSONLoader();
 					var object = loader.parse( body.geometry );
 					debugMode && console.log( "skeleton object:", object );
