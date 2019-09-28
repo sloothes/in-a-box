@@ -1,0 +1,50 @@
+{
+	"metadata": {
+		"type": "App"
+	},
+	"project": {
+		"vr": false,
+		"cache": true,
+		"editable": false,
+		"debugMode": true,
+		"shadows": true
+	},
+	"javascripts": [],
+	"stylesheets": [],
+	"skinned": [],
+	"scripts": {},
+	"camera": {
+		"metadata": {
+			"version": 4.4,
+			"type": "Object",
+			"generator": "Object3D.toJSON"
+		},
+		"object": {
+			"uuid": "29737B28-1F77-4E58-8D3D-D9F5B588DFED",
+			"type": "PerspectiveCamera",
+			"name": "Camera",
+			"matrix": [0.6708824634552002,2.1928283633343426e-9,-0.7415636777877808,0,-0.14357157051563263,0.9810792803764343,-0.12988722324371338,0,0.7275327444076538,0.19360652565956116,0.6581888794898987,0,21.82598304748535,5.808196067810059,19.74566650390625,1],
+			"fov": 50,
+			"zoom": 1,
+			"near": 0.1,
+			"far": 10000,
+			"focus": 10,
+			"aspect": 1.8623853211009174,
+			"filmGauge": 35,
+			"filmOffset": 0
+		}
+	},
+	"scene": {
+		"metadata": {
+			"version": 4.4,
+			"type": "Object",
+			"generator": "Object3D.toJSON"
+		},
+		"object": {
+			"uuid": "51901104-FADB-43D1-B2A3-15BDFA72A48D",
+			"type": "Scene",
+			"name": "Scene",
+			"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+		}
+	}
+}
