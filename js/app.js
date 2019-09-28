@@ -198,13 +198,13 @@ var APP = {
 					debugMode && console.log( "skeleton collection:", collection );
 
 					var bones = collection.find(function(item){
-						return item._id = "bones";
+						return item._id == "bones";
 					});
 
 					debugMode && console.log( "skeleton bones:", bones );
 
 					var body = collection.find(function(item){
-						return item._id = "body";
+						return item._id == "body";
 					});
 
 					debugMode && console.log( "skeleton body:", body );
