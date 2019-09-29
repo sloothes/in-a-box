@@ -64,19 +64,12 @@ var APP = {
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
 
-		//	Load external javascirpt libraries (previous version).
+		//	Load external javascirpt libraries.
 
 			if ( json.javascripts && json.javascripts.length > 0 ) {
 
 				var javascripts = json.javascripts.map( parseScript );
 				debugMode && console.log( "javascripts:", javascripts );
-
-				function parseScript( item ){ 
-					return {
-						name: item.name,
-						source: JSON.parse( item.source ) // important!
-					};
-				}
 
 				while ( javascripts.length ) {
 
@@ -87,201 +80,14 @@ var APP = {
 
 				}
 
-			}
-
-		//	Load external javascirpt libraries (current version).
-
-			jstrap: if ( json.collections ) {
-
-				if ( !json.collections.javascripts ) break jstrap;
-				if ( !json.collections.javascripts.length ) break jstrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
 				function parseScript( item ){ 
 					return {
-						_id: item.name,
+						name: item.name,
 						source: JSON.parse( item.source ) // important!
 					};
 				}
 
-				var javascripts = json.collections.javascripts.map( parseScript );
-
-				debugMode && console.log( "javascripts:", javascripts );
-
-				while ( javascripts.length ) {
-
-					var doc = javascripts.shift(); // important!
-					var script = new Function( "scope", doc.source );
-					script.bind( window ).call(); // bind and execute.
-					console.log("Library", doc._id, "loaded.");
-
-				}
-
 			}
-
-		//
-
-			fnctrap: if ( json.collections ) {
-
-				if ( !json.collections.functions ) break fnctrap;
-				if ( !json.collections.functions.length ) break fnctrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
-				var functions = json.collections.functions;
-				debugMode && console.log( "functions:", functions );
-
-			}
-
-			csstrap: if ( json.collections ) {
-
-				if ( !json.collections.stylesheets ) break csstrap;
-				if ( !json.collections.stylesheets.length ) break csstrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
-				var stylesheets = json.collections.stylesheets;
-				debugMode && console.log( "stylesheets:", stylesheets );
-
-			}
-
-			anitrap: if ( json.collections ) {
-
-				if ( !json.collections.animations ) break anitrap;
-				if ( !json.collections.animations.length ) break anitrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
-				var animations = json.collections.animations;
-				debugMode && console.log( "animations:", animations );
-
-			}
-
-			maltrap: if ( json.collections ) {
-
-				if ( !json.collections.male ) break maltrap;
-				if ( !json.collections.male.length ) break maltrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
-				var male = json.collections.male;
-				debugMode && console.log( "male:", male );
-
-			}
-
-			femtrap: if ( json.collections ) {
-
-				if ( !json.collections.female ) break femtrap;
-				if ( !json.collections.female.length ) break femtrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
-				(function(){
-
-					var collection = json.collections.female;
-					debugMode && console.log( "female collection:", collection );
-
-				})();
-
-			}
-
-			skltrap: if ( json.collections ) {
-
-				if ( !json.collections.skeleton ) break skltrap;
-				if ( !json.collections.skeleton.length ) break skltrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
-				(function(){
-
-					var collection = json.collections.skeleton;
-					debugMode && console.log( "skeleton collection:", collection );
-
-				//
-
-					var bones = collection.find(function(item){
-						return item._id == "bones";
-					});
-
-					debugMode && console.log( "skeleton bones:", bones );
-
-				//
-
-					var body = collection.find(function(item){
-						return item._id == "body";
-					});
-
-					debugMode && console.log( "skeleton body:", body );
-
-				//
-
-					skeleton = {
-						body: body,
-						bones: bones,
-					};
-
-					debugMode && console.log( "skeleton (data):", skeleton );
-
-				})();
-
-			}
-
-/*
-				// "skeleton.body.geometry" must be a text response of the THREE.XHRLoader,
-					//	loader.load("/skinned/skeleton/skeleton.json", function(response){
-					//		body.geometry = response.replace( /\"/g, '\\"' );
-					//	});
-  				//  where we replace (") with (\"). response.replace(/\"/g, '\\"');
-				//	We have to parse with "JSON.parse( body.geometry )" first,
-				//	before we get the correct json data for the THREE.JSONLoader().
-
-					var data = JSON.parse( body.geometry ); // important!
-
-					var loader = new THREE.JSONLoader();
-					var object = loader.parse( data ); // important!
-
-					debugMode && console.log( "skeleton object:", object );
-
-					var geometry = object.geometry;
-					var material = object.material; // TODO: materialfromJSON( body.material );
-
-					geometry.computeFaceNormals();
-					geometry.computeVertexNormals();
-					geometry.computeBoundingBox();
-					geometry.computeBoundingSphere();
-
-					var skinned = new THREE.SkinnedMesh( geometry, material );
-
-					skinned.renderDepth = 1;
-					skinned.frustumCulled = false;
-					skinned.position.set( 0, 0, 0 );
-					skinned.rotation.set( 0, 0, 0 );
-					skinned.scale.copy( body.scale );
-					skinned.castShadow = true;
-					skinned.name = body.name;
-
-					skeleton = { "body": skinned };
-
-					debugMode && console.log( "skeleton:", skeleton );
-*/
-
-			skntrap: if ( json.collections ) {
-
-				if ( !json.collections.skinned ) break skntrap;
-				if ( !json.collections.skinned.length ) break skntrap;
-
-			//  "https://stackoverflow.com/questions/4851657/call-break-in-nested-if-statements"
-
-				(function(){
-
-					var collection = json.collections.skinned;
-					debugMode && console.log( "skinned collection:", collection );
-
-				})();
-
-			}
-
 
 		//	Player renderer.
 
@@ -301,13 +107,11 @@ var APP = {
 			}
 
 			this.dom.appendChild( renderer.domElement );
-
 			this.setScene( loader.parse( json.scene ) );
 			this.setCamera( loader.parse( json.camera ) );
 
 		//  If editor controls always after setCamera(); important!
 
-		//
 			events = {
 				init: [],
 				start: [],
