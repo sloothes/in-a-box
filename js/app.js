@@ -10,7 +10,7 @@ var APP = {
 
 		var loader = new THREE.ObjectLoader();
 
-	//	var camera, scene, renderer; // debug!
+		var camera, scene, renderer;
 
 		var vr, controls, effect, center;
 
@@ -214,6 +214,20 @@ var APP = {
 
 					debugMode && console.log( "skeleton body:", body );
 
+				//
+
+					skeleton = {
+						body: body,
+						bones: bones,
+					};
+
+					debugMode && console.log( "skeleton (data):", skeleton );
+
+				})();
+
+			}
+
+/*
 				// "skeleton.body.geometry" must be a text response of the THREE.XHRLoader,
 					//	loader.load("/skinned/skeleton/skeleton.json", function(response){
 					//		body.geometry = response.replace( /\"/g, '\\"' );
@@ -250,10 +264,7 @@ var APP = {
 					skeleton = { "body": skinned };
 
 					debugMode && console.log( "skeleton:", skeleton );
-
-				})();
-
-			}
+*/
 
 			skntrap: if ( json.collections ) {
 
