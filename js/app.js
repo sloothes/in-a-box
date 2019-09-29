@@ -294,20 +294,7 @@ var APP = {
 			this.setScene( loader.parse( json.scene ) );
 			this.setCamera( loader.parse( json.camera ) );
 
-		//  As scene set now we can start adding 3D asset in scene.
 		//  If editor controls always after setCamera(); important!
-
-		//  TEST.
-
-			if ( debugMode ) {
-
-				scene.add( skeleton.body ); // debug!
-				controls = new THREE.EditorControls( camera, this.dom ); // debug!
-
-
-
-
-			}
 
 		//
 			events = {
