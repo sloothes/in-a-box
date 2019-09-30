@@ -51,16 +51,52 @@
 
 				var dialogContent = document.createElement("h2");
 				dialogContent.style.cssText = "width:fit-content;font-weight:bold;color:#fff;text-align:center;"
-				dialogContent.innerHTML = "Loading" + "<br>" + "Please wait..." + "<br>" + "(heavy duty)";
+				dialogContent.innerHTML = "Please wait..." + "<br>" + "Loading... " + "<span id=\"loaded\"></span>" + "<br>" + "(heavy duty)";
 
 				loadingDialog.appendChild( dialogContent );
 				document.body.appendChild( loadingDialog );
 
 			})();
 
-		//
 
-			var loader = new THREE.XHRLoader();
+			var manager = new THREE.LoadingManager();
+
+			manager.onLoad = function(){
+
+				var loadholder = document.getElementById("loaded");
+				loadholder.textContent = "completed";
+
+				console.log( "[manager]", "Loading completed." );
+
+		//		Remove.
+
+				setTimeout(function(){
+					var dialog = document.getElementById("loading-dialog");
+					dialog.style.display = "none"; dialog.remove();
+				}, 2000);
+
+			};
+
+			manager.onProgress = function(url, loaded, total){
+				console.log( "[manager]", loaded, "of", total, "files loaded:", url );
+			};
+
+			manager.onError = function(err){
+
+				var dialog = document.getElementById("loading-dialog");
+				dialog.style.display = "none"; dialog.remove();
+
+				console.error( "[manager]", err );
+
+				setTimeout( dialogError );
+
+			};
+
+			console.log( "manager:", manager );
+
+		//	Loader.
+
+			var loader = new THREE.XHRLoader( manager );
 			loader.load( "app.json", function ( text ) {
 
 				var json = JSON.parse( text );
@@ -89,64 +125,73 @@
 
 				}
 
-		//
+		//		Resize.
 
 				window.addEventListener( "resize", function () {
 					player.setSize( window.innerWidth, window.innerHeight );
 				});
 
-		//
+			}, function onProgress( e ){
 
-				setTimeout(function(){
-					var dialog = document.getElementById("loading-dialog");
-					dialog.style.display = "none"; dialog.remove();
-				}, 1000);
+				var loadholder = document.getElementById("loaded");
+
+				if ( e.lengthComputable && e.total > 0 ) {
+
+					var loaded = e.loaded / 1024; // (KB)
+					var total  = e.total / Math.pow(1024, 2); // (MB)
+
+					console.log( "on progress:", loaded.toFixed(2), "KB of", total.toFixed(2), "MB loaded." );
+
+					var percent = (e.loaded / e.total) * 100;
+					loadholder.textContent = percent.toFixed(0) + "%";
+
+
+				} else {
+
+					console.log( "on progress:", e.loaded, "bytes loaded." );
+
+					var total = 734445; // (in bytes)
+					var percent = (e.loaded / total) * 100;
+					loadholder.textContent = percent.toFixed(0) + "%";
+
+				}
+
+			}, function onError(err){
+
+				var dialog = document.getElementById("loading-dialog");
+				dialog.style.display = "none"; dialog.remove();
+
+				console.error(err);
+
+				setTimeout( dialogError );
 
 			});
 
-		/*
+		//	Error dialog.
 
-			(function(){
+			function dialogError(){
 
-			//  Joystick controls.
+				var errorDialog = document.createElement("div");
+				errorDialog.id = "error-dialog"
+				errorDialog.classList.add("middle", "text-center");
+				errorDialog.style.cssText = "position:absolute;top:0;left:0;bottom:0;right:0;background:none;z-index:9999;";
 
-				var joysticControls1 = document.createElement( "div" );
-				var joysticControls2 = document.createElement( "div" );
-				joysticControls1.id = "joystick-controls-1";
-				joysticControls2.id = "joystick-controls-2";
-				joysticControls1.classList.add("joystick-controls");
-				joysticControls2.classList.add("joystick-controls");
+				var errorContent = document.createElement("div");
+				errorContent.style.cssText = "width:fit-content;font-weight:bold;color:#fff;text-align:center;";
+				errorDialog.appendChild( errorContent );
 
-                document.body.appendChild( joysticControls1 );
-                document.body.appendChild( joysticControls2 );
+				var errorTitle = document.createElement("h2");
+				errorTitle.textContent = "Loading Error";
+				errorContent.appendChild( errorTitle ); 
 
-			})();
+				var errorMessage = document.createElement("h4");
+				errorMessage.style.cssText = "width:fit-content;font-weight:bold;color:#fff;text-align:center;";
+				errorMessage.textContent = "Please reload the page (or press F5 key)<br>and try again.";
+				errorContent.appendChild( errorMessage ); 
 
-		*/
-
-		/*
-			function bootboxLoading(){
-
-			//  Loading bar.
-
-				var dialog = window.bootbox.dialog({
-					message: "<div class=\"text-center\">"
-					+ "<h2 style=\"width:fit-content;font-weight:bold;"
-					+ "color:#fff;text-align:center;\">Loading<br>"
-					+ "Please wait...<br>(heavy duty)</h2></div>",
-					buttons: false,
-					closeButton: false,
-					className: "middle",
-				});
-
-				$( dialog.modal() ).find(".modal-content").css({
-                    "border"    : "none",
-                    "box-shadow": "none",
-                    "background": "none",
-				});
+				document.body.appendChild( errorDialog );
 
 			}
-		*/
 
 		</script>
 	</body>
