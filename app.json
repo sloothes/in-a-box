@@ -146,7 +146,7 @@
 		"46DBECB9-D7F9-4B08-96FA-809A02D567F5": [
 			{
 				"name": "shadow-light.js",
-				"source": "this.position.copy( camera.position );\n\ncameraLight = this;\n\ncameraLight.castShadow = true;\ncameraLight.position.multiplyScalar( 1.5 );\ncameraLight.shadow.mapSize.width  = Math.pow(2, 10); // 2048;\ncameraLight.shadow.mapSize.height = Math.pow(2, 10); // 2048;\n\nvar d = 30;\n\ncameraLight.shadow.camera.left = - d;\ncameraLight.shadow.camera.right = d;\ncameraLight.shadow.camera.top = d;\ncameraLight.shadow.camera.bottom = - d;\ncameraLight.shadow.camera.far = 10000;\n\n//\tTARGET.\n\ncameraLight.target = localPlayer.outfit.direction; // important!\n\n//  HELPER.\n\nshadowCameraHelper = new THREE.CameraHelper( cameraLight.shadow.camera );\nshadowCameraHelper.visible = false;\nscene.add( shadowCameraHelper );\n\nfunction update(){\n\tshadowCameraHelper.update();\n}\n\n//\tWATCHER.\n\nwatch( camera.position, [\"x\", \"y\", \"z\"], function(){\n\n\tcameraLight.position.copy( camera.position );\n//\tcameraLightHelper.position.x = camera.position.x;\n//\tcameraLightHelper.position.y = camera.position.y;\n//\tcameraLightHelper.position.z = camera.position.z;\n\n});\n\n\n\n"
+				"source": "this.position.copy( camera.position );\n\ncameraLight = this;\n\ncameraLight.castShadow = true;\ncameraLight.position.multiplyScalar( 1.5 );\ncameraLight.shadow.mapSize.width  = Math.pow(2, 10); // 2048;\ncameraLight.shadow.mapSize.height = Math.pow(2, 10); // 2048;\n\nvar d = 30;\n\ncameraLight.shadow.camera.left = - d;\ncameraLight.shadow.camera.right = d;\ncameraLight.shadow.camera.top = d;\ncameraLight.shadow.camera.bottom = - d;\ncameraLight.shadow.camera.far = 10000;\n\n//\tTARGET.\n\ncameraLight.target = localPlayer.outfit.direction; // important!\n\n//  HELPER.\n\nshadowCameraHelper = new THREE.CameraHelper( cameraLight.shadow.camera );\nshadowCameraHelper.visible = false;\nscene.add( shadowCameraHelper );\n\nfunction update(){\n\n\tcameraLight.position.x = camera.position.x;\n\tcameraLight.position.y = camera.position.y;\n\tcameraLight.position.z = camera.position.z;\n\n\tshadowCameraHelper.update();\n}\n\n\n//\tWATCHER.\n//watch( camera.position, [\"x\", \"y\", \"z\"], function(){\n//\tcameraLight.position.copy( camera.position );\n//});\n\n"
 			}],
 		"D010E9DD-C8BD-47D5-90A4-D6BDBD67C286": [
 			{
@@ -185,16 +185,16 @@
 			"generator": "Object3D.toJSON"
 		},
 		"object": {
-			"uuid": "88D8ACB1-EEA9-4462-93A3-F1C63364DD5D",
+			"uuid": "C21922A6-3B1A-4C5B-9D65-3019C7729E30",
 			"type": "PerspectiveCamera",
 			"name": "Camera",
-			"matrix": [-0.41667410731315613,1.1982379533037602e-9,-0.909055769443512,0,-0.21346059441566467,0.9720399379730225,0.09784163534641266,0,0.8836386799812317,0.23481571674346924,-0.4050239026546478,0,113.533447265625,30.170066833496094,-52.03910827636719,1],
+			"matrix": [-0.4166739881038666,4.287159516280781e-9,-0.909055769443512,0,-0.21346059441566467,0.9720399379730225,0.09784162044525146,0,0.8836386799812317,0.23481570184230804,-0.40502384305000305,0,113.533447265625,30.170066833496094,-52.03910827636719,1],
 			"fov": 50,
 			"zoom": 1,
 			"near": 0.1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.021788990825688,
+			"aspect": 1.0643985419198057,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
@@ -278,7 +278,7 @@
 					"name": "Ground",
 					"receiveShadow": true,
 					"visible": false,
-					"matrix": [1,0,0,0,0,0.000796250649727881,-0.9999997019767761,0,0,0.9999997019767761,0.000796250649727881,0,0,0,0,1],
+					"matrix": [1,0,0,0,0,0.0007962126983329654,-0.9999997019767761,0,0,0.9999997019767761,0.0007962126983329654,0,0,0,0,1],
 					"geometry": "A73A1BE0-7810-43B8-8EF3-46EDD1675DF7",
 					"material": "0F85C1AE-EE0E-4B8A-A2E3-FEBE42145A3B"
 				}]
