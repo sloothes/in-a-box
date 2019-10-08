@@ -96,7 +96,8 @@ var APP = {
 				touchstart: [],
 				touchend: [],
 				touchmove: [],
-				update: []
+				update: [],
+				dispose: []
 			};
 
 			var scriptWrapParams = "player,renderer,scene,camera,controls";
@@ -186,7 +187,7 @@ var APP = {
 
 		};
 
-	//
+	//	Camera.
 
 		this.setCamera = function ( value ) {
 
