@@ -51,8 +51,9 @@
 
 				var dialogContent = document.createElement("h2");
 				dialogContent.style.cssText = "width:fit-content;font-weight:bold;color:#fff;text-align:center;"
-				dialogContent.innerHTML = "<span id=\"waiting\">Please wait...</span>" + "<br>" 
-					+ "Loading... " + "<span id=\"loaded\"></span>" + "<br>" + "<span id=\"heavy-duty\">(heavy duty)</span>";
+				dialogContent.innerHTML = "<span id=\"wait\">Please wait...</span>" + "<br>" 
+					+ "<span id=\"loading\">Loading... </span>" + "<span id=\"loaded\"></span>" 
+					+ "<br>" + "<span id=\"duty\">(heavy duty)</span>";
 
 				loadingDialog.appendChild( dialogContent );
 				document.body.appendChild( loadingDialog );
@@ -65,11 +66,10 @@
 
 			manager.onLoad = function(){
 
-				document.getElementById("waiting").textContent = "";
-				document.getElementById("heavy-duty").textContent = "";
-
-				var loadholder = document.getElementById("loaded");
-				loadholder.textContent = "completed";
+				document.getElementById("wait).textContent = "";
+				document.getElementById("duty").textContent = "";
+				document.getElementById("loading").textContent = "Loading ";
+				document.getElementById("loaded").textContent = "completed";
 
 				console.log( "[manager]", "Loading completed." );
 
@@ -156,7 +156,7 @@
 
 					console.log( "on progress:", e.loaded, "bytes loaded." );
 
-					var total = 734585; // (in bytes)
+					var total = 4470161; // (in bytes)
 					var percent = (e.loaded / total) * 100;
 					loadholder.textContent = percent.toFixed(0) + "%";
 
