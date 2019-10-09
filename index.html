@@ -51,7 +51,8 @@
 
 				var dialogContent = document.createElement("h2");
 				dialogContent.style.cssText = "width:fit-content;font-weight:bold;color:#fff;text-align:center;"
-				dialogContent.innerHTML = "Please wait..." + "<br>" + "Loading... " + "<span id=\"loaded\"></span>" + "<br>" + "(heavy duty)";
+				dialogContent.innerHTML = "<span id=\"waiting\">Please wait...</span>" + "<br>" 
+					+ "Loading... " + "<span id=\"loaded\"></span>" + "<br>" + "<span id=\"heavy-duty\">(heavy duty)</span>";
 
 				loadingDialog.appendChild( dialogContent );
 				document.body.appendChild( loadingDialog );
@@ -63,6 +64,9 @@
 			var manager = new THREE.LoadingManager();
 
 			manager.onLoad = function(){
+
+				document.getElementById("waiting").textContent = "";
+				document.getElementById("heavy-duty").textContent = "";
 
 				var loadholder = document.getElementById("loaded");
 				loadholder.textContent = "completed";
