@@ -112,17 +112,45 @@ var APP = {
 
 			var scriptWrapResult = JSON.stringify( scriptWrapResultObj ).replace( /\"/g, "" );
 
-			for ( var uuid in json.scripts ) {
 
-				var object = scene.getObjectByProperty( "uuid", uuid, true );
+		//  Init scene object scripts first.
 
-				if ( object === undefined ) {
+			var uuid = json.scene.object.uuid; // important!
 
-					console.warn( "APP.Player: Script without object.", uuid ); 
+			var scripts = json.scripts[ uuid ]; 
 
-				//	continue;
+			for ( var i = 0; i < scripts.length; i ++ ) {
+
+				var script = scripts[ i ];
+
+				var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera, controls );
+
+				for ( var name in functions ) {
+
+					if ( functions[ name ] === undefined ) continue;
+
+					if ( events[ name ] === undefined ) {
+
+						console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+
+						continue;
+
+					}
+
+					events[ name ].push( functions[ name ].bind( scene ) );
 
 				}
+
+			}
+
+
+		//  Init objects scripts by scene children order.
+
+			for ( var j = 0; j < json.scene.object.children.length; j ++ ) {
+
+				var uuid = json.scene.object.children[ j ].uuid;
+
+				var object = scene.getObjectByProperty( "uuid", uuid, true ); // important!
 
 				var scripts = json.scripts[ uuid ];
 
