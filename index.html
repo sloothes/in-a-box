@@ -86,10 +86,10 @@
 
 				document.getElementById("wait").textContent = "";
 				document.getElementById("duty").textContent = "";
-				document.getElementById("loading").textContent = loaded + "of ";
-				document.getElementById("loaded").textContent = total + "files loaded.";
-
+				document.getElementById("loading").textContent = loaded + " of ";
+				document.getElementById("loaded").textContent = total + " loaded.";
 				console.log( "[manager]", loaded, "of", total, "files loaded:", url );
+
 			};
 
 			manager.onError = function(err){
