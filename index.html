@@ -64,6 +64,17 @@
 
 			var manager = new THREE.LoadingManager();
 
+			manager.onProgress = function(url, loaded, total){
+
+				document.getElementById("wait").textContent = "";
+				document.getElementById("duty").textContent = "";
+				document.getElementById("loading").textContent = " " + loaded + " of";
+				document.getElementById("loaded").textContent = " " + total + " loaded.";
+
+				console.log( "[manager]", loaded, "of", total, "files loaded:", url );
+
+			};
+
 			manager.onLoad = function(){
 
 			//	document.getElementById("wait").textContent = "";
@@ -78,17 +89,7 @@
 				setTimeout(function(){
 					var dialog = document.getElementById("loading-dialog");
 					dialog.style.display = "none"; dialog.remove();
-				}, 2000);
-
-			};
-
-			manager.onProgress = function(url, loaded, total){
-
-				document.getElementById("wait").textContent = "";
-				document.getElementById("duty").textContent = "";
-				document.getElementById("loading").textContent = loaded + " of ";
-				document.getElementById("loaded").textContent = total + " loaded.";
-				console.log( "[manager]", loaded, "of", total, "files loaded:", url );
+				}, 5000);
 
 			};
 
