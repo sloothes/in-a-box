@@ -10,7 +10,8 @@ var APP = {
 
 		var loader = new THREE.ObjectLoader();
 
-		var camera, scene, renderer;
+		var camera, scene; // renderer;
+	//	var renderer; // (global) debuging!
 
 		var vr, controls, effect, center;
 
@@ -61,7 +62,7 @@ var APP = {
 
 			}
 
-		//	Player renderer.
+		//	Player renderer. (global) debuging!
 
 			renderer = new THREE.WebGLRenderer({ 
 				antialias: true,
