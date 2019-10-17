@@ -10,8 +10,11 @@ var APP = {
 
 		var loader = new THREE.ObjectLoader();
 
-		var camera, scene; // renderer;
-	//	var renderer; // (global) debuging!
+	//	var camera, scene, renderer;
+
+		camera = null;   // (global for debugging)
+		scene = null;    // (global for debugging)
+		renderer = null; // (global for debugging)
 
 		var vr, controls, effect, center;
 
@@ -113,38 +116,41 @@ var APP = {
 			var scriptWrapResult = JSON.stringify( scriptWrapResultObj ).replace( /\"/g, "" );
 
 
-		//  Init scene object scripts first.
+		//  Initialize scene object scripts first.
 
 			var uuid = json.scene.object.uuid; // important!
 
 			var scripts = json.scripts[ uuid ]; 
 
-			for ( var i = 0; i < scripts.length; i ++ ) {
+			if ( scripts && scripts.length ) {
 
-				var script = scripts[ i ];
+				for ( var i = 0; i < scripts.length; i ++ ) {
 
-				var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera, controls );
+					var script = scripts[ i ];
 
-				for ( var name in functions ) {
+					var functions = ( new Function( scriptWrapParams, script.source + "\nreturn " + scriptWrapResult + ";" ).bind( object ) )( this, renderer, scene, camera, controls );
 
-					if ( functions[ name ] === undefined ) continue;
+					for ( var name in functions ) {
 
-					if ( events[ name ] === undefined ) {
+						if ( functions[ name ] === undefined ) continue;
 
-						console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+						if ( events[ name ] === undefined ) {
 
-						continue;
+							console.warn( "APP.Player: Event type not supported (", name, ")" ); 
+
+							continue;
+
+						}
+
+						events[ name ].push( functions[ name ].bind( scene ) );
 
 					}
-
-					events[ name ].push( functions[ name ].bind( scene ) );
 
 				}
 
 			}
 
-
-		//  Init objects scripts by scene children order.
+		//  Initialize objects scripts by scene children order.
 
 			for ( var j = 0; j < json.scene.object.children.length; j ++ ) {
 
@@ -153,6 +159,8 @@ var APP = {
 				var object = scene.getObjectByProperty( "uuid", uuid, true ); // important!
 
 				var scripts = json.scripts[ uuid ];
+
+				if ( scripts == undefined || scripts.length == 0 ) continue; // important!
 
 				for ( var i = 0; i < scripts.length; i ++ ) {
 
