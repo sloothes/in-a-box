@@ -31,7 +31,6 @@ var APP = {
 
 			console.clear(); // debug!
 
-
 		//	Config.
 
 			vr = json.project.vr;
