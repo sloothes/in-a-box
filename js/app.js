@@ -12,11 +12,7 @@ var APP = {
 
 		var loader = new THREE.ObjectLoader();
 
-	//	var camera, scene, renderer;
-
-		camera = null;   // (global for debugging)
-		scene = null;    // (global for debugging)
-		renderer = null; // (global for debugging)
+		var camera, scene, renderer;
 
 		var vr, controls, effect, center;
 
@@ -36,7 +32,7 @@ var APP = {
 		//	Config.
 
 			vr = json.project.vr;
-			debugMode = json.project.debugMode; // (global) important! 
+			debugMode = json.project.debugMode; // important! 
 			THREE.Cache.enabled = json.project.cache; // important!
 			console.log({ "vr": vr, "debugMode": debugMode, "cache": THREE.Cache.enabled });
 
@@ -66,7 +62,7 @@ var APP = {
 
 			}
 
-		//	Player renderer. (global) debuging!
+		//	Renderer.
 
 			renderer = new THREE.WebGLRenderer({ 
 				antialias: true,
@@ -209,7 +205,7 @@ var APP = {
 
 		};
 
-	//	Load js libraries.
+	//	Load libraries.
 
 		this.loadLibrary = function(){
 
@@ -266,11 +262,15 @@ var APP = {
 
 		};
 
+	//	Scene.
+
 		this.setScene = function ( value ) {
 
 			scene = value;
 
 		};
+
+	//	Renderer.
 
 		this.setSize = function ( width, height ) {
 
@@ -290,6 +290,8 @@ var APP = {
 
 		};
 
+	//	Dispatch.
+
 		function dispatch( array, event ) {
 
 			for ( var i = 0, l = array.length; i < l; i ++ ) {
@@ -299,6 +301,8 @@ var APP = {
 			}
 
 		}
+
+	//	Animate.
 
 		var prevTime, request;
 
@@ -330,6 +334,8 @@ var APP = {
 			prevTime = time;
 
 		}
+
+	//	Play/Stop.
 
 		this.play = function () {
 
@@ -366,6 +372,8 @@ var APP = {
 
 		};
 
+	//	Dispose.
+
 		this.dispose = function () {
 
 			while ( this.dom.children.length ) {
@@ -378,7 +386,7 @@ var APP = {
 
 		};
 
-	//
+	//	Event handlers.
 
 		function onDocumentKeyDown( event ) {
 
