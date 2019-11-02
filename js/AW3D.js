@@ -1,6 +1,6 @@
-//  AW3D.js (v0.4.1)
+//  AW3D.js (v0.4.2)
 
-AW3D = { VERSION: "0.4.1" };
+AW3D = { VERSION: "0.4.2" };
 
 //  Player Holder.
 
@@ -412,7 +412,7 @@ AW3D.OutfitManager.prototype = {
 		//  Add outfit item to scene.
 			this.direction.add( this[ name ] );
 
-		//	Update materials
+		//	Update textures.
 			if (this[ name ].material && !this[ name ].material.materials) {
 
 			//  Single material.
@@ -1288,15 +1288,23 @@ AW3D.AnimationHandler.prototype = {
 
 				case "male":
 					data = MaleAnimations[ name ];
-					break;
+				break;
 
 				case "female":
 					data = FemaleAnimations[ name ];
-					break;
+				break;
+
+				case "shemale":
+					data = FemaleAnimations[ name ];
+				break;
+
+				case "trans":
+					data = FemaleAnimations[ name ];
+				break;
 
 				default:
 					data = Animations[ name ];
-					break;
+				break;
 			}
 
 			var action = new THREE.Animation( this.mesh, data );
@@ -1327,7 +1335,23 @@ AW3D.AnimationHandler.prototype = {
 			return;
 		}
 
+		if (MaleAnimations && this.gender && this.gender == "shemale") {
+			Object.keys( MaleAnimations ).forEach(function(name, i){
+				self.loadAction( name );
+			});
+
+			return;
+		}
+
 		if (FemaleAnimations && this.gender && this.gender == "female") {
+			Object.keys( FemaleAnimations ).forEach(function(name, i){
+				self.loadAction( name );
+			});
+
+			return;
+		}
+
+		if (FemaleAnimations && this.gender && this.gender == "trans") {
 			Object.keys( FemaleAnimations ).forEach(function(name, i){
 				self.loadAction( name );
 			});
@@ -1343,10 +1367,14 @@ AW3D.AnimationHandler.prototype = {
 			return;
 		}
 
-		if ( this.gender && this.gender != "male" && this.gender != "female" ){
-			console.warn( "AW3D.AnimationHandler: reloadActions(" 
-						 + this.gender + "): Gender exists but is not male or female."
-						);
+		if ( this.gender 
+			&& this.gender != "male" && this.gender != "female" 
+			&& this.gender != "shemale" && this.gender != "trans" 
+		){
+
+			console.warn( "AW3D.AnimationHandler: reloadActions(" + this.gender 
+				+ "): Gender exists but is not male, female, shemale or trans."
+			);
 
 			return;
 		}
@@ -1356,20 +1384,22 @@ AW3D.AnimationHandler.prototype = {
 };
 
 
-
 //  MATERIAL TO JSON.
 
 //  materialtoJson.js (v1.6)
 //  Return a promise with the 
 //  material json object resolved.
 
+
 function materialtoJSON( material ){
 
-//  MULTIMATERIAL.
+/*body*/
+
+	//  MULTIMATERIAL.
 
 	if ( material.type == "MultiMaterial" || material.materials ) {
 
-		//  multimaterial to json.
+	//  multimaterial to json.
 
 		var multjson = {
 
@@ -1380,7 +1410,7 @@ function materialtoJSON( material ){
 		};
 
 
-		//  materials to json.
+	//  materials to json.
 
 		multjson.materials = [];
 
@@ -1398,7 +1428,7 @@ function materialtoJSON( material ){
 	}
 
 
-//  MATERIAL.
+	//  MATERIAL.
 
 	var json = {};
 
@@ -1419,7 +1449,7 @@ function materialtoJSON( material ){
 			break;
 
 
-				//  name, _id, uuid.
+		//  name, _id, uuid.
 
 			case "name":
 				json.name = material.name;
@@ -1434,7 +1464,7 @@ function materialtoJSON( material ){
 			break;
 
 
-				//  texture to json.
+		//  texture to json.
 
 			case "map":
 			case "bumpMap":
@@ -1457,7 +1487,7 @@ function materialtoJSON( material ){
 			break;
 
 
-				//  three color to hex.
+		//  three color to hex.
 
 			case "color":
 			case "emissive":
@@ -1472,7 +1502,7 @@ function materialtoJSON( material ){
 			break;
 
 
-				//  vector2 to array.
+		//  vector2 to array.
 
 			case "normalScale":
 
@@ -1500,6 +1530,8 @@ function materialtoJSON( material ){
 	}
 
 	return json;
+/*body*/
+
 }
 
 
@@ -1509,6 +1541,7 @@ function materialtoJSON( material ){
 
 function texturetoJSON( texture ){
 
+/*body*/
 	var json = {};
 
 	for (var name in texture ){
@@ -1522,15 +1555,14 @@ function texturetoJSON( texture ){
 			case "_listeners":
 			break;
 
-
-				//  uuid.
+		//  uuid.
 
 			case "uuid":
 				json[ name ] = texture[ name ] || THREE.Math.generateUUID();
 			break;
 
 
-				//  vector2 to array.
+		//  vector2 to array.
 
 			case "offset":
 			case "repeat":
@@ -1538,7 +1570,7 @@ function texturetoJSON( texture ){
 			break;
 
 
-				//  image to json.
+		//  image to json.
 
 			case "image":
 				json[ name ] = texture.sourceFile || getDataURL( texture[ name ] ); // important!
@@ -1554,6 +1586,8 @@ function texturetoJSON( texture ){
 	}
 
 	return json;
+/*body*/
+
 }
 
 
@@ -1562,10 +1596,12 @@ function texturetoJSON( texture ){
 
 function imagetoJSON( image ){
 
+/*body*/
 	return {
 		uuid: THREE.Math.generateUUID(),
 		src: image.src || getDataURL( image ),
 	};
+/*body*/
 
 }
 
@@ -1575,10 +1611,12 @@ function imagetoJSON( image ){
 
 function textureImagetoJSON( texture ){
 
+/*body*/
 	return {
 		uuid: THREE.Math.generateUUID(),
 		src: texture.sourceFile || texture.image.src || getDataURL( texture.image )
 	};
+/*body*/
 
 }
 
@@ -1589,7 +1627,9 @@ function textureImagetoJSON( texture ){
 
 function materialfromJSON( json ){
 
-//  MULTIMATERIAL.
+/*body*/
+
+	//  MULTIMATERIAL.
 
 	if ( json.type == "MultiMaterial" ) {
 
@@ -1603,7 +1643,7 @@ function materialfromJSON( json ){
 		}
 
 
-		//  Create multimaterial.
+	//  Create multimaterial.
 
 		var multimaterial = new THREE.MeshFaceMaterial(materials);
 
@@ -1614,7 +1654,7 @@ function materialfromJSON( json ){
 	}
 
 
-//  MATERIAL.
+	//  MATERIAL.
 
 	var options = {};
 
@@ -1630,14 +1670,14 @@ function materialfromJSON( json ){
 			break;
 
 
-				//  uuid.
+		//  uuid.
 
 			case "uuid":
 				options.uuid = json.uuid || THREE.Math.generateUUID();
 			break;
 
 
-				//  texture from json.
+		//  texture from json.
 
 			case "alphaMap":
 			case "aoMap":
@@ -1656,7 +1696,7 @@ function materialfromJSON( json ){
 			break;
 
 
-				//  three color to hex.
+		//  three color to hex.
 
 			case "color":
 			case "emissive":
@@ -1668,7 +1708,7 @@ function materialfromJSON( json ){
 			break;
 
 
-				//  vector2 from array.
+		//  vector2 from array.
 
 			case "normalScale":
 
@@ -1692,6 +1732,8 @@ function materialfromJSON( json ){
 	}
 
 	return new THREE[ options.type ](options);
+/*body*/
+
 }
 
 
@@ -1700,6 +1742,7 @@ function materialfromJSON( json ){
 
 function texturefromJSON( json ){
 
+/*body*/
 	var texture = new THREE.Texture();
 
 	for ( var name in json ){
@@ -1708,9 +1751,9 @@ function texturefromJSON( json ){
 
 			case "meta":
 			case "image":
-				break;
+			break;
 
-				//  array to vector2.
+		//  array to vector2.
 
 			case "offset":
 			case "repeat":
@@ -1720,10 +1763,10 @@ function texturefromJSON( json ){
 				texture[ name ] = new THREE.Vector2();
 				texture[ name ].fromArray( json[ name ] );
 
-				break;
+			break;
 
 
-				//  wrapS & wrapT.
+		//  wrapS & wrapT.
 
 			case "wrap":
 
@@ -1733,57 +1776,57 @@ function texturefromJSON( json ){
 				texture.wrapS = json[ name ][0];
 				texture.wrapT = json[ name ][1];
 
-				break;
+			break;
 
-				//  image from texture json with"FileReader.readAsDataURL(blob)".
+		//  image from texture json with"FileReader.readAsDataURL(blob)".
 
-				//  Check whether a match for the request is found in   
-				//  the CacheStorage using CacheStorage.match(). If so, serve that.
+		//  Check whether a match for the request is found in   
+		//  the CacheStorage using CacheStorage.match(). If so, serve that.
 
-				//  If not, open the "textures" cache using open(), 
-				//  put the default network request in the cache using Cache.put() 
-				//  and return a clone of the default network request using return response.clone().
+		//  If not, open the "textures" cache using open(), 
+		//  put the default network request in the cache using Cache.put() 
+		//  and return a clone of the default network request using return response.clone().
 
-				//  Clone is needed because put() consumes the response body.
-				//  If this fails (e.g., because the network is down), return a fallback response.
+		//  Clone is needed because put() consumes the response body.
+		//  If this fails (e.g., because the network is down), return a fallback response.
 
-				//  Pros:
+		//  Pros:
 
-				//  Easy to use.
-				//  Small, compact, safe code.
-				//  Texture.image.src is string.
-				//  Texture.image.src is dataURL.
-				//  Texture.image.src can reused.
-				//  Texture.image.src is always valid.
-				//  Texture.image.src can be send everywhere.
-				//  Texture.image.src can converted to canvas.
-				//  Texture.image (canvas) size always power of 2.
-				//  Texture.image.src can saved in storage objects.
-				//  Texture.image.src can converted vice versa to blob.
+			//  Easy to use.
+			//  Small, compact, safe code.
+			//  Texture.image.src is string.
+			//  Texture.image.src is dataURL.
+			//  Texture.image.src can reused.
+			//  Texture.image.src is always valid.
+			//  Texture.image.src can be send everywhere.
+			//  Texture.image.src can converted to canvas.
+			//  Texture.image (canvas) size always power of 2.
+			//  Texture.image.src can saved in storage objects.
+			//  Texture.image.src can converted vice versa to blob.
 
-				//  Cons:
+		//  Cons:
 
-				//  Larger size (~33%)
-				//  Take more time than URL.createObjectURL(blob);
+			//  Larger size (~33%)
+			//  Take more time than URL.createObjectURL(blob);
 
-				//  sourceFile.
-				//  case "sourceFile":
-				//      texture.sourceFile = json[ name ]; // important!
-				//  break;
+		//  sourceFile.
+		//  case "sourceFile":
+		//      texture.sourceFile = json[ name ]; // important!
+		//  break;
 
-				//  case "image": (N/A).
+		//  case "image": (N/A).
 			case "sourceFile":
 
 				texture.sourceFile = json.sourceFile;
 
-				//  SourceFile first.
+			//  SourceFile first.
 				var url = json.sourceFile || json.image.src || json.image || "//i.imgur.com/ODeftia.jpg";
 
-				//  URL.
+			//  URL.
 
 				if ( validator && validator.isURL( url ) ) {
 
-					//  Cache first.
+				//  Cache first.
 					caches.match( url ).then(function(response){
 
 						if ( !response ) 
@@ -1793,8 +1836,8 @@ function texturefromJSON( json ){
 
 					}).catch(function(err){
 
-						//  We use cors origin mode to avoid
-						//  texture tainted canvases, images.
+					//  We use cors origin mode to avoid
+					//  texture tainted canvases, images.
 
 						return fetch( url, {
 							mode: "cors",  // important!
@@ -1805,8 +1848,8 @@ function texturefromJSON( json ){
 
 						return caches.open("textures").then(function(cache){
 
-							//  Clone is needed because put() consumes the response body.
-							//  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+						//  Clone is needed because put() consumes the response body.
+						//  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
 
 							var clone = response.clone();
 							return cache.put( url, clone ).then(function(){
@@ -1827,7 +1870,7 @@ function texturefromJSON( json ){
 							img.onload = null; // optional!
 						};
 
-						//  Get dataURL from blob.
+					//  Get dataURL from blob.
 
 						var reader = new FileReader();
 						reader.onload = function() {
@@ -1841,7 +1884,7 @@ function texturefromJSON( json ){
 					break;
 				} 
 
-				//  DataURL.
+			//  DataURL.
 
 				if ( validator && validator.isDataURI( url ) ) {
 					var img = new Image();
@@ -1866,6 +1909,8 @@ function texturefromJSON( json ){
 	}
 
 	return texture;
+/*body*/
+
 }
 
 
@@ -1874,9 +1919,12 @@ function texturefromJSON( json ){
 
 function imagefromJSON( json, onLoadEnd ){
 
+/*body*/
+
 	var url = json.src;
 
-	//  Cache first.
+//  Cache first.
+
 	caches.match( url ).then(function(response){
 
 		if ( !response ) 
@@ -1886,21 +1934,20 @@ function imagefromJSON( json, onLoadEnd ){
 
 	}).catch(function(err){
 
-		//  We use cors origin mode to avoid
-		//  texture tainted canvases, images.
+	//  We use cors origin mode to avoid
+	//  texture tainted canvases, images.
 
 		return fetch( url, {
 			mode: "cors",  // important!
 			method: "GET",
 		});
 
-		//  TODO: REPLACE async/await FOR BACKWARD COMPETALITY.
 	}).then(function(response){
 
 		return caches.open("textures").then(function(cache){
 
-			//  Clone is needed because put() consumes the response body.
-			//  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
+		//  Clone is needed because put() consumes the response body.
+		//  See: "https://developer.mozilla.org/en-US/docs/Web/API/Cache/put"
 
 			var clone = response.clone();
 			return cache.put( url, clone ).then(function(){
@@ -1915,7 +1962,7 @@ function imagefromJSON( json, onLoadEnd ){
 		img.crossOrigin = "anonymous";  //  important!
 		img.onload = onLoadEnd;
 
-		//  Get dataURL from blob.
+	//  Get dataURL from blob.
 
 		return new Promise(function(resolve, reject){
 
@@ -1930,15 +1977,33 @@ function imagefromJSON( json, onLoadEnd ){
 		});
 
 	});
+/*body*/
 
 }
 
 
+
+const delimiter = "/*body*/"; // important!
+
+//	function materialtoJSON(material).
+//	var source = materialtoJSON.toString().split(delimiter)[1];
+//	window.materialtoJSON = new Function( "material", source );
+//debugMode && console.log( "materialtoJSON:", window.materialtoJSON.toString() );
+
+//	function materialfromJSON(json).
+//	var source = materialfromJSON.toString().split(delimiter)[1];
+//	window.materialfromJSON = new Function( "json", source );
+//debugMode && console.log( "materialfromJSON:", window.materialfromJSON.toString() );
+
+
+
 //  blobToDataUrl.js
 //  https://gist.github.com/tantaman/6921973
+//	https://hacks.mozilla.org/2012/02/storing-images-and-files-in-indexeddb/
 
 function convertToBase64(blob, callback) {
 
+/*body*/
 	var reader = new FileReader();
 
 	reader.onload = function(e) {
@@ -1946,7 +2011,15 @@ function convertToBase64(blob, callback) {
 	};
 
 	reader.readAsDataURL(blob);
+/*body*/
+
 }
+
+//	function blobToDataURL(blob, callback).
+//	var source = convertToBase64.toString().split(delimiter)[1];
+//	window.blobToDataURL = new Function( "blob", "callback", source );
+//debugMode && console.log( "blobToDataURL:", window.blobToDataURL.toString() );
+
 
 
 //  dataUrlToBlob.js
@@ -1954,6 +2027,7 @@ function convertToBase64(blob, callback) {
 
 function dataURLToBlob(dataURL) {
 
+/*body*/
 	var BASE64_MARKER = ";base64,";
 
 	if (dataURL.indexOf(BASE64_MARKER) == -1) {
@@ -1976,13 +2050,22 @@ function dataURLToBlob(dataURL) {
 	}
 
 	return new Blob([uInt8Array], {type: contentType});
+/*body*/
+
 }
+
+//	function dataURLToBlob(dataURL).
+//	var source = dataURLToBlob.toString().split(delimiter)[1];
+//	window.dataURLToBlob = new Function( "dataURL", source );
+//debugMode && console.log( "dataURLToBlob:", window.dataURLToBlob.toString() );
+
 
 
 //  makePowerOfTwo.js
 
 function makePowerOfTwo( image, natural ) {
 
+/*body*/
 	var canvas = document.createElement( "canvas" );
 
 	if ( natural ){
@@ -1996,17 +2079,27 @@ function makePowerOfTwo( image, natural ) {
 	var context = canvas.getContext( "2d" );
 	context.drawImage( image, 0, 0, canvas.width, canvas.height );
 
+	return canvas;
+/*body*/
+
 //  debugMode && console.warn( "outfitLoader:makePowerOfTwo(img):", 
 //  "Image resized to:", canvas.width, "x", canvas.height );
 
-	return canvas;
 }
+
+//	function makePowerOfTwo(image, natural).
+//	var source = getDataURL.toString().split(delimiter)[1];
+//	window.makePowerOfTwo = new Function( "image", "natural", source );
+//debugMode && console.log( "makePowerOfTwo:", window.makePowerOfTwo.toString() );
+
+
 
 
 //  getDataURL.js
 
 function getDataURL( image ) {
 
+/*body*/
 	var canvas;
 
 	if ( image.toDataURL !== undefined ) {
@@ -2032,13 +2125,23 @@ function getDataURL( image ) {
 		return canvas.toDataURL( "image/png" );
 
 	}
+/*body*/
 
 }
+
+//	function getDataURL(image).
+//	var source = getDataURL.toString().split(delimiter)[1];
+//	window.getDataURL = new Function( "image", source );
+//debugMode && console.log( "getDataURL:", window.getDataURL.toString() );
+
+
 
 
 //  deepCopy.js
 
 function deepCopy(obj) {
+
+/*body*/
 	if (Object.prototype.toString.call(obj) === "[object Array]") {
 		var out = [], i = 0, len = obj.length;
 		for ( ; i < len; i++ ) {
@@ -2054,12 +2157,23 @@ function deepCopy(obj) {
 		return out;
 	}
 	return obj;
+/*body*/
+
 }
 
+//	function deepCopy(obj).
+//	var source = deepCopy.toString().split(delimiter)[1];
+//	window.deepCopy = new Function( "obj", source );
+//debugMode && console.log( "deepCopy:", window.deepCopy.toString() );
 
-//  round.js  source: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round"
+
+
+
+//  round.js  "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round"
 
 function round(number, precision) {
+
+/*body*/
 	var shift = function (number, precision, reverseShift) {
 		if (reverseShift) {
 			precision = -precision;
@@ -2068,21 +2182,39 @@ function round(number, precision) {
 		return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
 	};
 	return shift(Math.round(shift(number, precision, false)), precision, true);
-}
-
-
-function stop(){
-
-	delete AW3D.PlayerHolder;
-	delete AW3D.PlayerHolderHelper;
-	delete AW3D.DirectionPointer;
-	delete AW3D.PlayerSphere;
-	delete AW3D.PlayerPointer;
-	delete AW3D.OutfitManager;
-	delete AW3D.AnimationHandler;
-
-	delete AW3D;
+/*body*/
 
 }
+
+//	function round(number, precision).
+//	var source = round.toString().split(delimiter)[1];
+//	window.round = new Function( "number", "precision", source );
+//debugMode && console.log( "round:", window.round.toString() );
+
+
+
+//	array_move.js  "https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another"
+
+function array_move(array, old_index, new_index) {
+
+/*body*/
+    if (new_index >= array.length) {
+        var k = new_index - array.length + 1;
+        while (k--) {
+            array.push(undefined);
+        }
+    }
+
+    array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+/*body*/
+
+	debugMode && console.log( array );
+};
+
+//	function array_move(array, old_index, new_index).
+//	var source = array_move.toString().split(delimiter)[1];
+//	window.array_move = new Function( "array", "old_index", "new_index", source );
+//debugMode && console.log( "array_move:", window.array_move.toString() );
+
 
 debugMode && console.log("AW3D.js");
