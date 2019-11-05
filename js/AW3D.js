@@ -1985,18 +1985,6 @@ function imagefromJSON( json, onLoadEnd ){
 
 const delimiter = "/*body*/"; // important!
 
-//	function materialtoJSON(material).
-//	var source = materialtoJSON.toString().split(delimiter)[1];
-//	window.materialtoJSON = new Function( "material", source );
-//debugMode && console.log( "materialtoJSON:", window.materialtoJSON.toString() );
-
-//	function materialfromJSON(json).
-//	var source = materialfromJSON.toString().split(delimiter)[1];
-//	window.materialfromJSON = new Function( "json", source );
-//debugMode && console.log( "materialfromJSON:", window.materialfromJSON.toString() );
-
-
-
 //  blobToDataUrl.js
 //  https://gist.github.com/tantaman/6921973
 //	https://hacks.mozilla.org/2012/02/storing-images-and-files-in-indexeddb/
@@ -2215,6 +2203,16 @@ function array_move(array, old_index, new_index) {
 //	var source = array_move.toString().split(delimiter)[1];
 //	window.array_move = new Function( "array", "old_index", "new_index", source );
 //debugMode && console.log( "array_move:", window.array_move.toString() );
+
+//	function materialtoJSON(material).
+//	var source = materialtoJSON.toString().split(delimiter)[1];
+//	window.materialtoJSON = new Function( "material", source );
+//debugMode && console.log( "materialtoJSON:", window.materialtoJSON.toString() );
+
+//	function materialfromJSON(json).
+//	var source = materialfromJSON.toString().split(delimiter)[1];
+//	window.materialfromJSON = new Function( "json", source );
+//debugMode && console.log( "materialfromJSON:", window.materialfromJSON.toString() );
 
 
 debugMode && console.log("AW3D.js");
